@@ -2,14 +2,17 @@
 
 # Team Reminder Frontend
 
-## 파일 구조
+## 폴더 구조
 
 ```shell
 lib
+├── configs
 ├── controllers
+├── init.dart
 ├── main.dart
 ├── models
 ├── utils
+│   └── getx
 └── views
 ```
 
@@ -21,13 +24,17 @@ lib
 
 ## 구현 내용
 
-일단 getx로
-저장은 get storage
+일단 getx로: https://pub.dev/packages/get#about-get
+저장은 get storage: https://pub.dev/packages/get_storage/install
 
 localizing 은 get Translations으로
 
 일단 글들은 infinite scroll로 해두고
 데이터 패치는 어캐할지랑 로컬에 저장할지는 나중에
+
+- https://api.flutter.dev/flutter/widgets/ListView/ListView.separated.html
+- https://empering.tistory.com/entry/%EB%A7%A4%EC%9A%B0-%EA%B0%84%EB%8B%A8%ED%95%9C-%EB%AC%B4%ED%95%9C-%EC%8A%A4%ED%81%AC%EB%A1%A4-%EB%A7%8C%EB%93%A4%EA%B8%B0
+- https://pub.dev/packages/infinite_scroll_pagination
 
 ## Getting Started
 
