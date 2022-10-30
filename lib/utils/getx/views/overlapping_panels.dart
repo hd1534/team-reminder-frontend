@@ -1,15 +1,19 @@
-import 'dart:developer' as developer;
-
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-class OverlappingPanels extends StatelessWidget {
-  Widget mainWidget;
-  Widget? leftWidget;
-  Widget? rightWidget;
+enum CurrentSide {
+  left,
+  main,
+  right,
+}
 
-  OverlappingPanels(
+class OverlappingPanels extends StatelessWidget {
+  final Widget mainWidget;
+  final Widget? leftWidget;
+  final Widget? rightWidget;
+
+  const OverlappingPanels(
       {super.key, required this.mainWidget, this.leftWidget, this.rightWidget});
 
   @override
@@ -48,14 +52,13 @@ class OverlappingPanels extends StatelessWidget {
 
 class OverlappingPanesController extends GetxController
     with GetSingleTickerProviderStateMixin {
-  // consts
-  final _animateDuration = const Duration(milliseconds: 200);
-
   // var
   final _dx = 0.0.obs;
   double get dx => _dx.value;
 
   var _dragStartTimestamp = 0;
+  Animation? _animation;
+  late AnimationController _animationController;
 
   //
   final double width;
@@ -63,9 +66,12 @@ class OverlappingPanesController extends GetxController
   final double leftEnd;
   final double rightEnd;
   final double baselineRatio;
+  final Duration animateDuration;
 
   final bool hasLeftWidget;
   final bool hasRightWidget;
+  var _currentSide = CurrentSide.main;
+  CurrentSide get currentSide => _currentSide;
 
   /// milliseconds
   final int? quickTranslation;
@@ -75,12 +81,11 @@ class OverlappingPanesController extends GetxController
     required this.hasLeftWidget,
     required this.hasRightWidget,
     this.restWidth = 100,
-    this.baselineRatio = 0.5,
-    this.quickTranslation = 200,
+    this.baselineRatio = 0.45,
+    this.animateDuration = const Duration(milliseconds: 200),
+    this.quickTranslation = 300,
   })  : leftEnd = -(width - restWidth),
         rightEnd = width - restWidth;
-
-  late AnimationController _animationController;
 
   void onHorizontalDragStart(DragStartDetails details) {
     _dragStartTimestamp = DateTime.now().millisecondsSinceEpoch;
@@ -96,33 +101,57 @@ class OverlappingPanesController extends GetxController
   }
 
   void onHorizontalDragEnd(DragEndDetails details) {
+    var translateGoal = 0.0;
+    var vX = details.primaryVelocity!;
     var duration = DateTime.now().millisecondsSinceEpoch - _dragStartTimestamp;
-    double translateGoal = 0;
 
     // 기준점 이상 드래그 했거나, quickTranslation내 드래그한 경우 해당 방향으로
-    if (dx.abs() > width * baselineRatio ||
-        quickTranslation != null && duration < quickTranslation!) {
+    if (quickTranslation != null && duration < quickTranslation!) {
+      var index = currentSide.index;
+      index += vX == 0
+          ? 0
+          : vX > 0
+              ? -1
+              : 1;
+
+      translateGoal = index == CurrentSide.main.index
+          ? 0
+          : index > CurrentSide.main.index
+              ? leftEnd
+              : rightEnd;
+    } else if (dx.abs() > width * baselineRatio) {
       translateGoal = dx < 0 ? leftEnd : rightEnd;
     }
+
+    _currentSide = translateGoal == 0
+        ? CurrentSide.main
+        : translateGoal > 0
+            ? CurrentSide.left
+            : CurrentSide.right;
 
     translate(dx, translateGoal);
   }
 
   void translate(double begin, double end) {
-    // TODO: FIX: 애니메이션이 한번 동작하고 나선 안돌아감
+    _animation = Tween(begin: begin, end: end).animate(_animationController);
 
-    var animation = Tween(begin: begin, end: end).animate(_animationController);
-    animation.addListener(() => _dx.value = animation.value);
+    _animationController.removeListener(_setDxWithAnimationValue);
+    _animation!.addListener(_setDxWithAnimationValue);
 
+    _animationController.reset();
     _animationController.forward();
+  }
+
+  /// _animation must not be null
+  void _setDxWithAnimationValue() {
+    _dx.value = _animation!.value;
   }
 
   @override
   void onInit() {
     super.onInit();
-
     _animationController =
-        AnimationController(vsync: this, duration: _animateDuration);
+        AnimationController(vsync: this, duration: animateDuration);
   }
 
   @override
