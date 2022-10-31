@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
-enum CurrentSide {
+enum Side {
   left,
   main,
   right,
@@ -13,17 +13,30 @@ class OverlappingPanels extends StatelessWidget {
   final Widget? leftWidget;
   final Widget? rightWidget;
 
-  const OverlappingPanels(
-      {super.key, required this.mainWidget, this.leftWidget, this.rightWidget});
+  /// A callback to notify when a panel reveal has completed.
+  final ValueChanged<Side>? onSideChange;
+  final ValueChanged<Side>? afterSideChanged;
+
+  const OverlappingPanels({
+    super.key,
+    required this.mainWidget,
+    this.leftWidget,
+    this.rightWidget,
+    this.onSideChange,
+    this.afterSideChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return GetX<OverlappingPanesController>(
           init: OverlappingPanesController(
-              width: constraints.maxWidth,
-              hasLeftWidget: leftWidget != null,
-              hasRightWidget: rightWidget != null),
+            width: constraints.maxWidth,
+            hasLeftWidget: leftWidget != null,
+            hasRightWidget: rightWidget != null,
+            onSideChange: onSideChange,
+            afterSideChanged: afterSideChanged,
+          ),
           builder: (_) {
             return Stack(children: [
               Offstage(
@@ -70,11 +83,15 @@ class OverlappingPanesController extends GetxController
 
   final bool hasLeftWidget;
   final bool hasRightWidget;
-  var _currentSide = CurrentSide.main;
-  CurrentSide get currentSide => _currentSide;
+  var _currentSide = Side.main;
+  Side get currentSide => _currentSide;
 
   /// milliseconds
   final int? quickTranslation;
+
+  /// A callback to notify when a panel reveal has completed.
+  final ValueChanged<Side>? onSideChange;
+  final ValueChanged<Side>? afterSideChanged;
 
   OverlappingPanesController({
     required this.width,
@@ -84,6 +101,8 @@ class OverlappingPanesController extends GetxController
     this.baselineRatio = 0.45,
     this.animateDuration = const Duration(milliseconds: 200),
     this.quickTranslation = 300,
+    this.onSideChange,
+    this.afterSideChanged,
   })  : leftEnd = -(width - restWidth),
         rightEnd = width - restWidth;
 
@@ -101,42 +120,89 @@ class OverlappingPanesController extends GetxController
   }
 
   void onHorizontalDragEnd(DragEndDetails details) {
-    var translateGoal = 0.0;
-    var vX = details.primaryVelocity!;
+    Side side = Side.main;
     var duration = DateTime.now().millisecondsSinceEpoch - _dragStartTimestamp;
 
     // 기준점 이상 드래그 했거나, quickTranslation내 드래그한 경우 해당 방향으로
     if (quickTranslation != null && duration < quickTranslation!) {
       var index = currentSide.index;
+      var vX = details.primaryVelocity ?? 0;
+
       index += vX == 0
           ? 0
           : vX > 0
               ? -1
               : 1;
 
-      translateGoal = index == CurrentSide.main.index
-          ? 0
-          : index > CurrentSide.main.index
-              ? leftEnd
-              : rightEnd;
+      side = index == Side.main.index
+          ? Side.main
+          : index < Side.main.index
+              ? Side.left
+              : Side.right;
     } else if (dx.abs() > width * baselineRatio) {
-      translateGoal = dx < 0 ? leftEnd : rightEnd;
+      side = dx < 0 ? Side.right : Side.left;
     }
 
-    _currentSide = translateGoal == 0
-        ? CurrentSide.main
-        : translateGoal > 0
-            ? CurrentSide.left
-            : CurrentSide.right;
+    revealSide(side);
+  }
 
-    translate(dx, translateGoal);
+  /// You can use revealSide like
+  /// IconButton(
+  ///   icon: const Icon(Icons.group),
+  ///   onPressed: () =>
+  ///       Get.find<OverlappingPanesController>().revealSide(Side.right),
+  /// )
+  void revealSide(Side side) {
+    // Check whether the side exists or not
+    switch (side) {
+      case Side.left:
+        if (hasLeftWidget) {
+          if (side == currentSide && dx == rightEnd) return;
+          _currentSide = Side.left;
+        }
+        break;
+      case Side.main:
+        if (side == currentSide && dx == 0) return;
+        _currentSide = Side.main;
+        break;
+      case Side.right:
+        if (hasRightWidget) {
+          if (side == currentSide && dx == leftEnd) return;
+          _currentSide = Side.right;
+        }
+        break;
+      default:
+        throw Exception("There's no matching side");
+    }
+
+    if (onSideChange != null) {
+      onSideChange!(currentSide);
+    }
+
+    // translate
+    switch (currentSide) {
+      case Side.left:
+        translate(dx, rightEnd);
+        break;
+      case Side.main:
+        translate(dx, 0);
+        break;
+      case Side.right:
+        translate(dx, leftEnd);
+        break;
+    }
   }
 
   void translate(double begin, double end) {
     _animation = Tween(begin: begin, end: end).animate(_animationController);
 
-    _animationController.removeListener(_setDxWithAnimationValue);
-    _animation!.addListener(_setDxWithAnimationValue);
+    _animationController
+      ..removeListener(_setDxWithAnimationValue)
+      ..removeStatusListener(_onAnimationStatusChange);
+
+    _animation!
+      ..addListener(_setDxWithAnimationValue)
+      ..addStatusListener(_onAnimationStatusChange);
 
     _animationController.reset();
     _animationController.forward();
@@ -145,6 +211,17 @@ class OverlappingPanesController extends GetxController
   /// _animation must not be null
   void _setDxWithAnimationValue() {
     _dx.value = _animation!.value;
+  }
+
+  void _onAnimationStatusChange(AnimationStatus status) {
+    switch (status) {
+      case AnimationStatus.completed:
+        if (afterSideChanged != null) {
+          afterSideChanged!(_currentSide);
+        }
+        break;
+      default:
+    }
   }
 
   @override
