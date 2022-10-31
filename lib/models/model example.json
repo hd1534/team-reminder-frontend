@@ -1,0 +1,41 @@
+{
+  "group id": {
+    "name": "group name",
+    "hash": "hash for update check",
+    "todoLists": [
+      {
+        "id": "2021-10-31.hash",
+        "isCompleted": false,
+        "order": 1,
+        "title": "create data structure",
+        "memo": "with dynamodb",
+        "tags": ["backend", "database"],
+        "date": {
+          "start": "2021-10-31",
+          "end": "2022-10-31",
+          "on": "2021-10-31T13:30:00"
+        },
+        "assigned": ["member id"]
+      }
+    ],
+    "votes": [
+      {
+        "id": "2021-10-31.hash",
+        "title": "lunch menu",
+        "isMultipleChoice": true,
+        "list": [{ "name": "pizza", "votedMember": ["member id"] }]
+      }
+    ],
+    // "schedule": {},
+    "members": [
+      {
+        "id": "id",
+        "name": "name",
+        "email": "email@email.com"
+        // "permissions": ["add todo", "delete todo"]
+      }
+    ]
+  }
+}
+
+// order는 따로 함수를 빼서 관리
