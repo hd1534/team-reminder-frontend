@@ -1,41 +1,72 @@
 {
   "group id": {
+    "id": "group id",
     "name": "group name",
     "hash": "hash for update check",
-    "todoLists": [
-      {
-        "id": "2021-10-31.hash",
-        "isCompleted": false,
-        "order": 1,
-        "title": "create data structure",
-        "memo": "with dynamodb",
-        "tags": ["backend", "database"],
-        "date": {
-          "start": "2021-10-31",
-          "end": "2022-10-31",
-          "on": "2021-10-31T13:30:00"
-        },
-        "assigned": ["member id"]
-      }
-    ],
-    "votes": [
-      {
-        "id": "2021-10-31.hash",
-        "title": "lunch menu",
-        "isMultipleChoice": true,
-        "list": [{ "name": "pizza", "votedMember": ["member id"] }]
-      }
-    ],
-    // "schedule": {},
     "members": [
       {
         "id": "id",
         "name": "name",
-        "email": "email@email.com"
-        // "permissions": ["add todo", "delete todo"]
+        "email": "email@email.com",
+        "Oauth": 1, // bit flag (ex: google = 1, ...)
+        "permissions": [
+          // ?
+          { "admin": true },
+          { "add": ["thread name"] },
+          { "delete": ["thread name"] },
+          { "manage": ["member", "thread"] }
+        ]
       }
-    ]
+    ],
+    "tags": ["backend", "database", "food", "lunch"],
+    "threads": {
+      "thread name": {
+        "id": "id",
+        "type": "memo",
+        "items": [
+          {
+            "id": "2021-10-31.hash",
+            "title": "data structure memo",
+            "order": 1,
+            "memo": "with dynamodb",
+            "tags": ["backend", "database"]
+          }
+        ]
+      },
+      "thread name2": {
+        "id": "id",
+        "type": "todoList",
+        "items": [
+          {
+            "id": "2021-10-31.hash",
+            "isCompleted": false,
+            "order": 1,
+            "title": "create data structure",
+            "memo": "with dynamodb",
+            "tags": ["backend", "database"],
+            "date": {
+              "start": "2021-10-31",
+              "end": "2022-10-31",
+              "on": "2021-10-31T13:30:00"
+            },
+            "assigned": ["member id"]
+          }
+        ]
+      },
+      "thread name3": {
+        "id": "id",
+        "type": "votes",
+        "items": [
+          {
+            "id": "2021-10-31.hash",
+            "title": "lunch menu",
+            "isMultipleChoice": true,
+            "tags": ["food", "lunch"],
+            "items": [{ "name": "pizza", "votedMember": ["member id"] }]
+          }
+        ]
+      }
+      // "schedule": {},
+    }
   }
 }
-
-// order는 따로 함수를 빼서 관리
