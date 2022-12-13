@@ -3,6 +3,7 @@ import 'dart:developer' as developer;
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:team_reminder_frontend/views/thread.dart';
 import 'package:team_reminder_frontend/utils/getx/views/overlapping_panels.dart';
 
 class Home extends StatelessWidget {
@@ -10,36 +11,14 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () =>
-              Get.find<OverlappingPanesController>().revealSide(Side.left),
-        ),
-        title: Text('appName'.tr),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.group),
-            onPressed: () =>
-                Get.find<OverlappingPanesController>().revealSide(Side.right),
-          )
-        ],
+    return OverlappingPanels(
+      leftWidget: Container(
+        color: Colors.red,
       ),
-      body: SafeArea(
-          child: OverlappingPanels(
-        leftWidget: Container(
-          color: Colors.red,
-        ),
-        mainWidget: Container(
-          color: Colors.green,
-        ),
-        rightWidget: Container(
-          color: Colors.blue,
-        ),
-        onSideChange: (value) => developer.log("change to $value"),
-        afterSideChanged: (value) => developer.log("$value revealed"),
-      )),
+      mainWidget: const Thread(),
+      rightWidget: Container(
+        color: Colors.blue,
+      ),
     );
   }
 }

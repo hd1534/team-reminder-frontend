@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 
 import 'configs/translations.dart';
 
-import 'init.dart';
+import 'controllers/app_controller.dart';
 
 import 'views/home.dart';
 
@@ -15,23 +15,25 @@ void main() {
 class MyApp extends StatelessWidget {
   MyApp({super.key});
 
-  final AppController c = Get.put(AppController());
+  final c = Get.put(AppController());
 
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return Obx(() {
       if (!c.isInitialized.value) {
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       } else if (c.exception != null) {
         // handle exception
         return Center(child: Text('error'.tr));
       } else {
         return GetMaterialApp(
+            // TODO: isDarkmode ? ThemeData.dark() : ThemeData.light()
+            theme: ThemeData.dark(),
             translations: Messages(),
             locale: Get.deviceLocale,
-            fallbackLocale: Locale('en', 'US'),
-            home: Home());
+            fallbackLocale: const Locale('en', 'US'),
+            home: const Home());
       }
     });
   }

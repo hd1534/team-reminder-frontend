@@ -26,7 +26,7 @@ class GroupModel {
         tags = json['tags']?.cast<String>(),
         threads = {
           for (MapEntry<String, dynamic> e in json['threads'].entries)
-            e.key: ThreadModel.fromJsonFactory(e.value)
+            e.key: ThreadModel.fromJson(e.value)
         };
 
   Map<String, dynamic> toJson() {

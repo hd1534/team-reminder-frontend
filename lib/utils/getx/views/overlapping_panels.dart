@@ -29,8 +29,8 @@ class OverlappingPanels extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return GetX<OverlappingPanesController>(
-          init: OverlappingPanesController(
+      return GetX<OverlappingPanelsController>(
+          init: OverlappingPanelsController(
             width: constraints.maxWidth,
             hasLeftWidget: leftWidget != null,
             hasRightWidget: rightWidget != null,
@@ -63,7 +63,7 @@ class OverlappingPanels extends StatelessWidget {
   }
 }
 
-class OverlappingPanesController extends GetxController
+class OverlappingPanelsController extends GetxController
     with GetSingleTickerProviderStateMixin {
   // var
   final _dx = 0.0.obs;
@@ -93,7 +93,7 @@ class OverlappingPanesController extends GetxController
   final ValueChanged<Side>? onSideChange;
   final ValueChanged<Side>? afterSideChanged;
 
-  OverlappingPanesController({
+  OverlappingPanelsController({
     required this.width,
     required this.hasLeftWidget,
     required this.hasRightWidget,
@@ -150,7 +150,7 @@ class OverlappingPanesController extends GetxController
   /// IconButton(
   ///   icon: const Icon(Icons.group),
   ///   onPressed: () =>
-  ///       Get.find<OverlappingPanesController>().revealSide(Side.right),
+  ///       Get.find<OverlappingPanelsController>().revealSide(Side.right),
   /// )
   void revealSide(Side side) {
     // Check whether the side exists or not

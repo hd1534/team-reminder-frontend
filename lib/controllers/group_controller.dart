@@ -1,3 +1,36 @@
+import 'dart:convert';
+
+import 'package:get/get.dart';
+
+import 'package:team_reminder_frontend/models/group_model.dart';
+
+class GroupController extends GetxController {
+  // null is main home
+  final _myGroups = RxMap<String, GroupModel>();
+  final _currentGroup = Rx<GroupModel?>(null);
+
+  get myGroupList => _myGroups;
+
+  // TODO: caching
+
+  void init() async {
+    // pass
+  }
+
+  void changeGroup(String groupName) {
+    fetchGroup(groupName);
+  }
+
+  /// dumy data
+  void fetchGroup(String groupName) async {
+    await Future.delayed(const Duration(seconds: 1)); // TODO: remove
+
+    var json = jsonDecode(dummy);
+    _currentGroup.value = GroupModel.fromJson(json);
+  }
+}
+
+String dummy = '''
 {
   "group id": {
     "id": "group id",
@@ -23,7 +56,7 @@
       "thread name": {
         "id": "id",
         "type": "memo",
-        "posts": [
+        "items": [
           {
             "id": "2021-10-31.hash",
             "title": "data structure memo",
@@ -36,7 +69,7 @@
       "thread name2": {
         "id": "id",
         "type": "todoList",
-        "posts": [
+        "items": [
           {
             "id": "2021-10-31.hash",
             "isCompleted": false,
@@ -56,7 +89,7 @@
       "thread name3": {
         "id": "id",
         "type": "votes",
-        "posts": [
+        "items": [
           {
             "id": "2021-10-31.hash",
             "title": "lunch menu",
@@ -70,3 +103,4 @@
     }
   }
 }
+''';

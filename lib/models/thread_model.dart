@@ -1,6 +1,6 @@
 // ignore_for_file: unnecessary_this
 
-import 'package:team_reminder_frontend/models/thread_item_model.dart';
+import 'package:team_reminder_frontend/models/thread_post_model.dart';
 
 extension IntExt on int {
   DateTime toDateTime() {
@@ -16,54 +16,47 @@ enum ThreadType {
 
 class ThreadModel {
   String id;
-  String title;
+  String name;
   ThreadType type;
   int? order;
   List<String>? tags;
   DateTime? createdDate;
+  List<PostItem>? posts;
 
-  ThreadModel._internal({
+  ThreadModel({
     required this.id,
-    required this.title,
+    required this.name,
     required this.type,
     this.order,
     this.tags,
     this.createdDate,
   });
 
-  ThreadModel._fromJson(Map<String, dynamic> json)
+  ThreadModel.fromJson(Map<String, dynamic> json)
       : id = json['id'],
-        title = json['title'],
+        name = json['name'],
         type = ThreadType.values.byName(json['type']!),
         order = json['order'],
         tags = json['tags']?.cast<String>(),
+        posts = List<PostItem>.from(
+            json['posts']?.map((v) => PostItem.fromJson(v))),
         createdDate = (json['createdDate'] as int?)?.toDateTime();
-
-  factory ThreadModel.fromJsonFactory(Map<String, dynamic> json) {
-    var type = ThreadType.values.byName(json['type']!);
-
-    switch (type) {
-      case ThreadType.memo:
-        return Memo.fromJson(json);
-      case ThreadType.todoList:
-        return TodoList.fromJson(json);
-      case ThreadType.vote:
-        return Vote.fromJson(json);
-    }
-  }
 
   Map<String, dynamic> toJson() {
     final data = <String, dynamic>{};
     data['id'] = this.id;
-    data['title'] = this.title;
+    data['name'] = this.name;
     data['type'] = this.type.name;
     data['order'] = this.order;
     data['tags'] = this.tags;
+    data['posts'] = this.posts?.map((v) => v.toJson()).toList();
     data['createdDate'] = this.createdDate?.millisecondsSinceEpoch;
 
     return data;
   }
 }
+
+// remove below
 
 class Memo extends ThreadModel {
   String? memo;
@@ -71,7 +64,7 @@ class Memo extends ThreadModel {
   Memo({
     // super
     required String id,
-    required String title,
+    required String name,
     required ThreadType type,
     int? order,
     List<String>? tags,
@@ -79,9 +72,9 @@ class Memo extends ThreadModel {
 
     // this
     this.memo,
-  }) : super._internal(
+  }) : super(
           id: id,
-          title: title,
+          name: name,
           type: type,
           order: order,
           tags: tags,
@@ -90,7 +83,7 @@ class Memo extends ThreadModel {
 
   Memo.fromJson(Map<String, dynamic> json)
       : memo = json['memo'],
-        super._fromJson(json);
+        super.fromJson(json);
 
   @override
   Map<String, dynamic> toJson() {
@@ -112,7 +105,7 @@ class TodoList extends ThreadModel {
   TodoList({
     // super
     required String id,
-    required String title,
+    required String name,
     required ThreadType type,
     int? order,
     List<String>? tags,
@@ -124,9 +117,9 @@ class TodoList extends ThreadModel {
     this.startDate,
     this.isCompleted,
     this.assigned,
-  }) : super._internal(
+  }) : super(
           id: id,
-          title: title,
+          name: name,
           type: type,
           order: order,
           tags: tags,
@@ -139,7 +132,7 @@ class TodoList extends ThreadModel {
         startDate = (json['startDate'] as int?)?.toDateTime(),
         isCompleted = json['isCompleted'],
         assigned = json['assigned']?.cast<String>(),
-        super._fromJson(json);
+        super.fromJson(json);
 
   @override
   Map<String, dynamic> toJson() {
@@ -162,7 +155,7 @@ class Vote extends ThreadModel {
   Vote({
     // super
     required String id,
-    required String title,
+    required String name,
     required ThreadType type,
     int? order,
     List<String>? tags,
@@ -171,9 +164,9 @@ class Vote extends ThreadModel {
     // this
     this.isMultipleChoice,
     this.items,
-  }) : super._internal(
+  }) : super(
           id: id,
-          title: title,
+          name: name,
           type: type,
           order: order,
           tags: tags,
@@ -184,7 +177,7 @@ class Vote extends ThreadModel {
       : isMultipleChoice = json['isMultipleChoice'],
         items = List<VoteItem>.from(
             json['items']?.map((v) => VoteItem.fromJson(v))),
-        super._fromJson(json);
+        super.fromJson(json);
 
   @override
   Map<String, dynamic> toJson() {
