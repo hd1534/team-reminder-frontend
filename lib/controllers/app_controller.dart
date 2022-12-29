@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import 'package:team_reminder_frontend/controllers/group_controller.dart';
 import 'package:team_reminder_frontend/controllers/thread_controller.dart';
 
 class AppController extends GetxService {
@@ -23,8 +24,10 @@ class AppController extends GetxService {
   }
 
   Future<void> initGetxController() async {
+    Get.put(GroupController());
     Get.put(ThreadController());
 
+    Get.find<GroupController>().changeGroup('test'); // TODO: remove tmp code
     Get.find<ThreadController>().changeThread('test'); // TODO: remove tmp code
   }
 

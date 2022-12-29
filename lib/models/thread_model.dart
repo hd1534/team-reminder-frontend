@@ -39,7 +39,7 @@ class ThreadModel {
         order = json['order'],
         tags = json['tags']?.cast<String>(),
         posts = List<PostItem>.from(
-            json['posts']?.map((v) => PostItem.fromJson(v))),
+            json['posts']?.map((v) => PostItem.fromJson(v)) ?? []),
         createdDate = (json['createdDate'] as int?)?.toDateTime();
 
   Map<String, dynamic> toJson() {
