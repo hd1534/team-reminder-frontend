@@ -11,6 +11,7 @@ import 'package:team_reminder_frontend/configs/constants.dart';
 
 import 'package:team_reminder_frontend/configs/http.dart';
 
+// for caching
 mixin DataLoadMixin {
   final _isCached = false.obs; // 캐시된 데이터인 경우
   final _isLoading = false.obs;

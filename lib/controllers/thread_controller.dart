@@ -20,4 +20,6 @@ class ThreadController extends GetxController with DataLoadMixin {
   void setData(Map<String, dynamic> json) {
     _currentThread.value = ThreadModel.fromJson(json);
   }
+
+  void sendPost(String data) {}
 }

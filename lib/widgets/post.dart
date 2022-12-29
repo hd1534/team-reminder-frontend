@@ -10,34 +10,19 @@ import 'package:team_reminder_frontend/models/thread_post_model.dart';
 
 import 'package:team_reminder_frontend/controllers/thread_controller.dart';
 
-class Thread extends StatelessWidget {
-  const Thread({super.key});
+class PostWidget extends StatelessWidget {
+  const PostWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
     final overPanelCtrl = Get.find<OverlappingPanelsController>();
 
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.menu),
-          onPressed: () => overPanelCtrl.revealSide(Side.left),
-        ),
-        title: Text('appName'.tr),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.group),
-            onPressed: () => overPanelCtrl.revealSide(Side.right),
-          )
-        ],
-      ),
-      body: GetX<ThreadController>(
-        builder: (_) {
-          return ListView(
-            children: _.currentThread?.posts?.map(postBuilder).toList() ?? [],
-          );
-        },
-      ),
+    return GetX<ThreadController>(
+      builder: (_) {
+        return ListView(
+          children: _.currentThread?.posts?.map(postBuilder).toList() ?? [],
+        );
+      },
     );
   }
 }
