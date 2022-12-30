@@ -87,12 +87,14 @@ class _CenterViewState extends State<CenterView> {
               )
             ],
           ),
-          body: Obx(() {
-            _controller =
-                TextEditingController(text: threadCtrl.currentThread?.contents);
-            return SafeArea(
-                child: _edit ? editorWidget() : makrdownViewWidget());
-          }),
+          body: SafeArea(
+            child: _edit
+                ? editorWidget()
+                : Obx(() {
+                    _controller.text = threadCtrl.currentThread?.contents ?? '';
+                    return makrdownViewWidget();
+                  }),
+          ),
         ));
   }
 
