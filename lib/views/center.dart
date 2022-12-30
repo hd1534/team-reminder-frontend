@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import 'package:flutter_markdown/flutter_markdown.dart' show MarkdownStyleSheet;
 import 'package:simple_markdown_editor/simple_markdown_editor.dart';
 
 import 'package:team_reminder_frontend/utils/getx/views/overlapping_panels.dart';
@@ -101,12 +102,15 @@ class _CenterViewState extends State<CenterView> {
       enableToolBar: true,
       emojiConvert: true,
       autoCloseAfterSelectEmoji: false,
+      style: TextStyle(fontSize: 20),
     );
   }
 
   MarkdownParse makrdownViewWidget() {
     return MarkdownParse(
       data: _controller.text,
+      styleSheet: MarkdownStyleSheet.fromTheme(Theme.of(context))
+          .copyWith(textScaleFactor: 1.5),
       onTapHastag: (String name, String match) {
         // name => hashtag
         // match => #hashtag
