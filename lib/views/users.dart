@@ -42,8 +42,36 @@ class UsersWidget extends StatelessWidget {
     );
   }
 
-  Container _teamMembers() {
-    return Container();
+  Widget _teamMembers() {
+    final members = Get.find<GroupController>().currentGroup?.members;
+
+    if (members == null) return Container();
+
+    return ListView.builder(
+        shrinkWrap: true,
+        scrollDirection: Axis.vertical,
+        itemCount: members.length,
+        itemBuilder: (context, idx) {
+          return Container(
+            padding: EdgeInsets.all(SizeConfig.defaultSize * 3),
+            child: Row(children: [
+              CircleAvatar(
+                backgroundImage: NetworkImage("${members[idx].photoURL}"),
+                radius: SizeConfig.defaultSize * 2,
+              ),
+              Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.defaultSize * 1)),
+              Text(
+                '${members[idx].name}',
+                style: TextStyle(
+                    color: Colors.white,
+                    decoration: TextDecoration.none,
+                    fontSize: SizeConfig.defaultSize * 2),
+              ),
+            ]),
+          );
+        });
   }
 
   Container _header() {
