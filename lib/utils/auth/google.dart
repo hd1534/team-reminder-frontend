@@ -22,8 +22,9 @@ Future<UserCredential> signInWithGoogle() async {
   final result = await FirebaseAuth.instance.signInWithCredential(credential);
 
   updateUserInfo(FirebaseAuth.instance.currentUser!.uid, {
-    'name': '${result.user?.displayName}',
-    'email': '${result.user?.email}'
+    'name': result.user?.displayName,
+    'email': result.user?.email,
+    'photoURL': result.user?.photoURL,
   });
 
   // Once signed in, return the UserCredential

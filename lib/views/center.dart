@@ -59,8 +59,11 @@ class _CenterViewState extends State<CenterView> {
                   ? IconButton(
                       icon: const Icon(Icons.save),
                       onPressed: () {
-                        ; // TODO: on save
-                        setState(() => _edit = false);
+                        updateThread(_controller.text).then((err) {
+                          if (err == null) return setState(() => _edit = false);
+
+                          Get.snackbar('error'.tr, err);
+                        });
                       },
                     )
                   : IconButton(

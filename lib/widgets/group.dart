@@ -37,11 +37,20 @@ class GroupWidget extends StatelessWidget {
 
 Widget threadBuilder(MapEntry<String, String> entry) {
   return Container(
-      padding: EdgeInsets.only(bottom: 10),
-      child: CircleAvatar(
-        backgroundColor: const Color.fromRGBO(148, 148, 148, 0.5),
-        child: FittedBox(fit: BoxFit.cover, child: Text(entry.value)),
-      ));
+    padding: EdgeInsets.only(bottom: 15),
+    child: ElevatedButton(
+      onPressed: () =>
+          Get.find<GroupController>().listeningCurrentGroup(entry.key),
+      child: FittedBox(fit: BoxFit.cover, child: Text(entry.value)),
+      style: ElevatedButton.styleFrom(
+        shape: CircleBorder(),
+        padding: EdgeInsets.all(20),
+        backgroundColor:
+            const Color.fromRGBO(148, 148, 148, 0.5), // <-- Button color
+        foregroundColor: Colors.white, // <-- Splash color
+      ),
+    ),
+  );
 }
 
 Widget addGroup() {
@@ -50,7 +59,7 @@ Widget addGroup() {
     child: Icon(Icons.add, color: Colors.white),
     style: ElevatedButton.styleFrom(
       shape: CircleBorder(),
-      padding: EdgeInsets.all(10),
+      padding: EdgeInsets.all(20),
       backgroundColor:
           const Color.fromRGBO(148, 148, 148, 0.5), // <-- Button color
       foregroundColor: Colors.red, // <-- Splash color

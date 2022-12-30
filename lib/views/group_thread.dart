@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:team_reminder_frontend/widgets/group.dart';
+import 'package:team_reminder_frontend/widgets/thread.dart';
 
 class Groupthread extends StatelessWidget {
   const Groupthread({super.key});
@@ -16,7 +17,7 @@ class Groupthread extends StatelessWidget {
         ),
         Expanded(
           flex: 2,
-          child: Container(color: Colors.red),
+          child: ThreadWidget(),
         ),
       ]),
     );
