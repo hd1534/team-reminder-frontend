@@ -4,9 +4,13 @@ import 'package:flutter/material.dart';
 
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'package:get/utils.dart';
+import 'package:get/get.dart';
 
 import 'package:team_reminder_frontend/configs/size_config.dart';
+
+import 'package:team_reminder_frontend/controllers/group_controller.dart';
+
+import 'package:team_reminder_frontend/widgets/invite_group.dart';
 
 class UsersWidget extends StatelessWidget {
   const UsersWidget({super.key});
@@ -14,22 +18,27 @@ class UsersWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        color: Color.fromRGBO(48, 48, 48, 0.8),
-        child: ListView(
-          children: [
-            _header(),
-            _logOut(),
-            const Divider(color: Colors.white),
-            _invitation(),
-            _teamMembers(),
-          ],
-        ));
+      color: Color.fromRGBO(48, 48, 48, 0.8),
+      child: Obx(() => ListView(
+            children: [
+              _header(),
+              _logOut(),
+              const Divider(color: Colors.white),
+              ...(Get.find<GroupController>().currentGroup == null
+                  ? []
+                  : [
+                      _invitation(),
+                      _teamMembers(),
+                    ])
+            ],
+          )),
+    );
   }
 
   OutlinedButton _invitation() {
     return OutlinedButton(
       child: Text('invite member'.tr),
-      onPressed: () {},
+      onPressed: () => Get.dialog(InviteGroupDialog()),
     );
   }
 

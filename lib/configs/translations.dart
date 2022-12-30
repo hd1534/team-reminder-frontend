@@ -31,14 +31,17 @@ class Messages extends Translations {
 
           // login
           "login": "로그인",
+          "logout": "로그아웃",
 
           // group
           "cancel": "취소",
+          "invite member": "멤버 초대",
           "add group": "그룹 추가",
           "create new": "새로 만들기",
           "create group": "그룹 만들기",
           "name of the new group": "새로운 그룹 이름",
           "type the invitation code": "초대 코드릅 입력해주세요",
+          "sharing invite code": "초대 코드를 공유하세요",
 
           // thread
           "create thread": "쓰레드 만들기",
