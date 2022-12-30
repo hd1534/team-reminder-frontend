@@ -74,17 +74,17 @@ const dummy = {
   "threads": {
     "test": {
       "id": "test",
-      "type": "memo",
+      "contents": "contents",
       "name": "name"
     },
     "todoList": {
       "id": "todoList",
-      "type": "todoList",
+      "contents": "contents",
       "name": "todoList"
     },
     "vote": {
       "id": "vote",
-      "type": "vote",
+      "contents": "contents",
       "name": "vote"
     }
   }
@@ -94,62 +94,21 @@ const dummy = {
 {
     "id": "test",
     "name": "name",
-    "type": "memo",
-    "posts": [
-      {
-        "id": "2021-10-31.hash",
-        "title": "DataLoadMixin test",
-        "order": 1,
-        "contexts": "with dynamodb",
-        "tags": ["backend", "database"]
-      },
-      {
-        "id": "2022-10-31.hash",
-        "title": "12 13 tue",
-        "order": 2,
-        "contexts": "fadskf",
-        "tags": ["backend", "database"]
-      }
-    ]
+    "contents": "contents"
 }
 """,
   '$API_THREAD_BASE_URL/todoList': """
 {
-      "id": "todoList",
-      "type": "todoList",
-      "name": "todoList",
-      "posts": [
-        {
-          "id": "2021-10-31.hash",
-          "isCompleted": false,
-          "order": 1,
-          "title": "create data structure",
-          "memo": "with dynamodb",
-          "tags": ["backend", "database"],
-          "date": {
-            "start": "2021-10-31",
-            "end": "2022-10-31",
-            "on": "2021-10-31T13:30:00"
-          },
-          "assigned": ["member id"]
-        }
-      ]
-    }
+    "id": "todoList",
+    "name": "todoList",
+    "contents": "contents"
+}
 """,
   '$API_THREAD_BASE_URL/vote': """
 {
-      "id": "vote",
-      "type": "vote",
-      "name": "vote",
-      "itemsDepricated": [
-        {
-          "id": "2021-10-31.hash",
-          "title": "lunch menu",
-          "isMultipleChoice": true,
-          "tags": ["food", "lunch"],
-          "itemsDepricated": [{ "name": "pizza", "votedMember": ["member id"] }]
-        }
-      ]
-    }
+    "id": "vote",
+    "name": "vote",
+    "contents": "contents"
+}
 """
 };

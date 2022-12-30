@@ -2,25 +2,50 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 
+import 'package:simple_markdown_editor/simple_markdown_editor.dart';
+
 import 'package:team_reminder_frontend/utils/getx/views/overlapping_panels.dart';
 
-import 'package:team_reminder_frontend/widgets/post.dart';
+import 'package:team_reminder_frontend/controllers/thread_controller.dart';
+
 import 'package:team_reminder_frontend/widgets/text_input.dart';
 
-class CenterView extends StatelessWidget {
+class CenterView extends StatefulWidget {
   const CenterView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final overPanelCtrl = Get.find<OverlappingPanelsController>();
+  State<CenterView> createState() => _CenterViewState();
+}
 
+class _CenterViewState extends State<CenterView> {
+  bool _edit = false;
+  late TextEditingController _controller;
+
+  final threadCtrl = Get.find<ThreadController>();
+  final overPanelCtrl = Get.find<OverlappingPanelsController>();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller =
+        TextEditingController(text: threadCtrl.currentThread?.contents);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _controller.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
 
-          if (!currentFocus.hasPrimaryFocus) {
-            currentFocus.unfocus();
-          }
+          // if (!currentFocus.hasPrimaryFocus) {
+          //   currentFocus.unfocus();
+          // }
         },
         child: Scaffold(
           appBar: AppBar(
@@ -30,23 +55,48 @@ class CenterView extends StatelessWidget {
             ),
             title: Text('appName'.tr),
             actions: [
+              _edit
+                  ? IconButton(
+                      icon: const Icon(Icons.save),
+                      onPressed: () {
+                        ; // TODO: on save
+                        setState(() => _edit = false);
+                      },
+                    )
+                  : IconButton(
+                      icon: const Icon(Icons.edit),
+                      onPressed: () => setState(() => _edit = true),
+                    ),
               IconButton(
                 icon: const Icon(Icons.group),
                 onPressed: () => overPanelCtrl.revealSide(Side.right),
               )
             ],
           ),
-          body: Stack(
-            children: [
-              PostWidget(),
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 0,
-                child: TextInputWidget(),
-              ),
-            ],
-          ),
+          body: SafeArea(child: _edit ? editorWidget() : makrdownViewWidget()),
         ));
+  }
+
+  MarkdownFormField editorWidget() {
+    return MarkdownFormField(
+      controller: _controller,
+      enableToolBar: true,
+      emojiConvert: true,
+      autoCloseAfterSelectEmoji: false,
+    );
+  }
+
+  MarkdownParse makrdownViewWidget() {
+    return MarkdownParse(
+      data: _controller.text,
+      onTapHastag: (String name, String match) {
+        // name => hashtag
+        // match => #hashtag
+      },
+      onTapMention: (String name, String match) {
+        // name => mention
+        // match => #mention
+      },
+    );
   }
 }

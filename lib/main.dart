@@ -28,8 +28,9 @@ class MyApp extends StatelessWidget {
         return Center(child: Text('error'.tr));
       } else {
         return GetMaterialApp(
-            // TODO: isDarkmode ? ThemeData.dark() : ThemeData.light()
-            theme: ThemeData.dark(),
+            theme: ThemeData(
+                brightness: Brightness.dark,
+                iconTheme: IconThemeData(color: Colors.black87)),
             translations: Messages(),
             locale: Get.deviceLocale,
             fallbackLocale: const Locale('en', 'US'),

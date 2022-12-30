@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:team_reminder_frontend/utils/getx/views/overlapping_panels.dart';
 
 import 'package:team_reminder_frontend/widgets/group.dart';
-import 'package:team_reminder_frontend/widgets/post.dart';
 
 import 'package:team_reminder_frontend/views/center.dart';
 
