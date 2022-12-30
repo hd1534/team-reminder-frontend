@@ -10,6 +10,8 @@ import 'configs/translations.dart';
 
 import 'controllers/app_controller.dart';
 
+import 'package:team_reminder_frontend/configs/size_config.dart';
+
 import 'package:team_reminder_frontend/views/home.dart';
 import 'package:team_reminder_frontend/views/login.dart';
 
@@ -47,6 +49,8 @@ class MyApp extends StatelessWidget {
           home: StreamBuilder(
             stream: FirebaseAuth.instance.authStateChanges(),
             builder: (context, snapshot) {
+              SizeConfig.init(context);
+
               // loading
               if (snapshot.connectionState != ConnectionState.active) {
                 return const Center(child: CircularProgressIndicator());
