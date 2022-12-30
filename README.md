@@ -2,6 +2,11 @@
 
 # Team Reminder Frontend
 
+## firebase
+
+https://firebase.google.com/docs/flutter/setup?platform=ios
+https://firebase.google.com/docs/auth/flutter/start
+
 ## 폴더 구조
 
 ```shell

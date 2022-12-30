@@ -10,6 +10,9 @@ class Messages extends Translations {
 
           // page
           "appName": "Team Reminder",
+
+          // login
+          "login": "login",
         },
         'ko_KR': {
           // 에러
@@ -18,6 +21,9 @@ class Messages extends Translations {
 
           // page
           "appName": "팀 리마인더",
+
+          // login
+          "login": "로그인",
         }
       };
 }

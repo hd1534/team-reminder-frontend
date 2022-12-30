@@ -9,18 +9,17 @@ import 'package:team_reminder_frontend/utils/getx/views/overlapping_panels.dart'
 import 'package:team_reminder_frontend/widgets/group.dart';
 
 import 'package:team_reminder_frontend/views/center.dart';
+import 'package:team_reminder_frontend/views/users.dart';
 
-class Home extends StatelessWidget {
-  const Home({super.key});
+class HomeWidget extends StatelessWidget {
+  const HomeWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return OverlappingPanels(
-      leftWidget: const GroupWidget(),
-      mainWidget: const CenterView(),
-      rightWidget: Container(
-        color: Colors.blue,
-      ),
+    return const OverlappingPanels(
+      leftWidget: GroupWidget(),
+      mainWidget: CenterView(),
+      rightWidget: UsersWidget(),
     );
   }
 }

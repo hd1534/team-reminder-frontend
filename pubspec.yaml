@@ -41,6 +41,10 @@ dependencies:
   get_storage: ^2.0.3
   http: ^0.13.5
   simple_markdown_editor: ^0.2.0
+  firebase_core: ^2.4.1
+  firebase_auth: ^4.2.4
+  google_sign_in: ^5.4.2
+  flutter_signin_button: ^2.0.0
 
 dev_dependencies:
   flutter_test:

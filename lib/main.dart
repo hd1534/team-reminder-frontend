@@ -1,14 +1,24 @@
 import 'package:flutter/material.dart';
 
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:get/get.dart';
 
 import 'configs/translations.dart';
 
 import 'controllers/app_controller.dart';
 
-import 'views/home.dart';
+import 'package:team_reminder_frontend/views/home.dart';
+import 'package:team_reminder_frontend/views/login.dart';
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
   runApp(MyApp());
 }
 
@@ -28,13 +38,31 @@ class MyApp extends StatelessWidget {
         return Center(child: Text('error'.tr));
       } else {
         return GetMaterialApp(
-            theme: ThemeData(
-                brightness: Brightness.dark,
-                iconTheme: IconThemeData(color: Colors.black87)),
-            translations: Messages(),
-            locale: Get.deviceLocale,
-            fallbackLocale: const Locale('en', 'US'),
-            home: const Home());
+          theme: ThemeData(
+              brightness: Brightness.dark,
+              iconTheme: const IconThemeData(color: Colors.black87)),
+          translations: Messages(),
+          locale: Get.deviceLocale,
+          fallbackLocale: const Locale('en', 'US'),
+          home: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              // loading
+              if (snapshot.connectionState != ConnectionState.active) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              // logged in
+              final user = snapshot.data;
+              if (user != null) {
+                return const HomeWidget();
+              }
+
+              // logged out
+              return const LoginWidget();
+            },
+          ),
+        );
       }
     });
   }
