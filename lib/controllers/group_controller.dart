@@ -58,6 +58,7 @@ class GroupController extends GetxController {
 Future<String?> participateGroup(String code) async {
   final userId = FirebaseAuth.instance.currentUser?.uid;
   final userName = FirebaseAuth.instance.currentUser?.displayName;
+  final photoURL = FirebaseAuth.instance.currentUser?.photoURL;
 
   if (userId == null || userName == null) return 'need to login'.tr;
 
@@ -67,7 +68,7 @@ Future<String?> participateGroup(String code) async {
 
   await FirebaseDatabase.instance.ref().update({
     'users/$userId/groups/$code': snapshot.value,
-    'groups/$code/members/$userId': userName,
+    'groups/$code/members/$userId': {'name': userName, 'photoURL': photoURL},
   });
 
   Get.find<GroupController>().listeningCurrentGroup(code);

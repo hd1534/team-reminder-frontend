@@ -6,6 +6,7 @@ import 'package:simple_markdown_editor/simple_markdown_editor.dart';
 
 import 'package:team_reminder_frontend/utils/getx/views/overlapping_panels.dart';
 
+import 'package:team_reminder_frontend/controllers/group_controller.dart';
 import 'package:team_reminder_frontend/controllers/thread_controller.dart';
 
 import 'package:team_reminder_frontend/widgets/text_input.dart';
@@ -53,7 +54,16 @@ class _CenterViewState extends State<CenterView> {
               icon: const Icon(Icons.menu),
               onPressed: () => overPanelCtrl.revealSide(Side.left),
             ),
-            title: Text('appName'.tr),
+            title: Obx(() {
+              final curGroup = Get.find<GroupController>().currentGroup;
+              final curThread = Get.find<ThreadController>().currentThread;
+
+              if (curGroup == null && curThread == null) {
+                return Text('appName'.tr);
+              }
+
+              return Text('${curGroup?.name ?? ""}/${curThread?.name ?? ""}');
+            }),
             actions: [
               _edit
                   ? IconButton(
@@ -76,7 +86,12 @@ class _CenterViewState extends State<CenterView> {
               )
             ],
           ),
-          body: SafeArea(child: _edit ? editorWidget() : makrdownViewWidget()),
+          body: Obx(() {
+            _controller =
+                TextEditingController(text: threadCtrl.currentThread?.contents);
+            return SafeArea(
+                child: _edit ? editorWidget() : makrdownViewWidget());
+          }),
         ));
   }
 

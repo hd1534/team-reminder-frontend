@@ -1,5 +1,3 @@
-import 'dart:developer' as developer;
-
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -45,12 +43,35 @@ class ThreadWidget extends StatelessWidget {
               _.currentGroup?.threads.map(threadBuilder).toList() ?? [];
 
           return ListView(
-            children: myGroups + [addGroup()],
+            children: [
+              groupInfoWidget(_.currentGroup?.name),
+              const Divider(color: Colors.white),
+              ...myGroups,
+              addGroup(),
+            ],
           );
         },
       ),
     );
   }
+}
+
+Widget groupInfoWidget(String? groupName) {
+  return Container(
+    alignment: Alignment.topCenter,
+    padding: EdgeInsets.symmetric(vertical: 10),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(10),
+      color: const Color.fromRGBO(148, 148, 148, 0.5),
+    ),
+    child: Text(
+      '$groupName',
+      style: TextStyle(
+        color: Colors.white,
+        decoration: TextDecoration.none,
+      ),
+    ),
+  );
 }
 
 Widget threadBuilder(ThreadModel thread) {
@@ -59,7 +80,6 @@ Widget threadBuilder(ThreadModel thread) {
     child: OutlinedButton(
       onPressed: () =>
           Get.find<ThreadController>().listeningCurrentThread(thread.id),
-      // Get.find<ThreadController>().listeningCurrentGroup(entry.key),
       child: FittedBox(fit: BoxFit.cover, child: Text(thread.name)),
       style: OutlinedButton.styleFrom(
         padding: EdgeInsets.all(20),
