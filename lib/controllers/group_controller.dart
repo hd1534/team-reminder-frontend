@@ -45,8 +45,6 @@ class GroupController extends GetxController with DataLoadMixin {
       var data = Map<String, String>.from(event.snapshot.value as Map);
 
       _myGroups.addAll(data);
-
-      dev.log('_myGroups: $_myGroups');
     });
   }
 }
@@ -57,15 +55,33 @@ Future<String?> participateGroup(String code) async {
 
   if (userId == null || userName == null) return 'need to login'.tr;
 
-  var groupRef = FirebaseDatabase.instance.ref('groups/$code');
-  var snapshot = await groupRef.child('name').get();
+  var snapshot =
+      await FirebaseDatabase.instance.ref('groups/$code').child('name').get();
   if (snapshot.exists == false) return 'not founeded'.tr;
 
-  var userRef = FirebaseDatabase.instance.ref('users/$userId/groups');
+  await FirebaseDatabase.instance.ref().update({
+    'users/$userId/groups/$code': snapshot.value,
+    'groups/$code/members/$userId': userName,
+  });
+  return null;
+}
 
-  await userRef.update({code: snapshot.value});
-  await groupRef.update({
-    'members': {userId: userName}
+Future<String?> createGroup(String groupName) async {
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  final userName = FirebaseAuth.instance.currentUser?.displayName;
+
+  if (userId == null || userName == null) return 'need to login'.tr;
+
+  var groupKey = FirebaseDatabase.instance.ref().child('groups').push().key;
+
+  await FirebaseDatabase.instance.ref().update({
+    'users/$userId/groups/$groupKey': groupName,
+    'groups/$groupKey': {
+      'name': groupName,
+      'admin': {userId: userName},
+      'members': {userId: userName},
+      'threads': {}
+    }
   });
 
   return null;

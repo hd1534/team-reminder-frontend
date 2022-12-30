@@ -28,8 +28,11 @@ class Messages extends Translations {
           "login": "로그인",
 
           // group
+          "cancel": "취소",
           "add group": "그룹 추가",
           "create new": "새로 만들기",
+          "create group": "그룹 만들기",
+          "name of the new group": "새로운 그룹 이름",
           "type the invitation code": "초대 코드릅 입력해주세요",
         }
       };
