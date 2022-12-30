@@ -12,6 +12,8 @@ import 'package:team_reminder_frontend/models/thread_post_model.dart';
 import 'package:team_reminder_frontend/controllers/user_controller.dart';
 import 'package:team_reminder_frontend/controllers/group_controller.dart';
 
+import 'package:team_reminder_frontend/widgets/add_group.dart';
+
 class GroupWidget extends StatelessWidget {
   GroupWidget({super.key});
 
@@ -22,10 +24,10 @@ class GroupWidget extends StatelessWidget {
     return SafeArea(
       child: GetX<GroupController>(
         builder: (_) {
-          developer.log('${_.myGroups}');
+          final myGroups = _.myGroups.entries.map(threadBuilder).toList();
 
           return ListView(
-            children: _.myGroups.entries.map(threadBuilder).toList(),
+            children: myGroups + [addGroup()],
           );
         },
       ),
@@ -33,9 +35,25 @@ class GroupWidget extends StatelessWidget {
   }
 }
 
-CircleAvatar threadBuilder(MapEntry<String, String> entry) {
-  return CircleAvatar(
-    backgroundColor: Colors.brown.shade800,
-    child: FittedBox(fit: BoxFit.cover, child: Text(entry.value)),
+Widget threadBuilder(MapEntry<String, String> entry) {
+  return Container(
+      padding: EdgeInsets.only(bottom: 10),
+      child: CircleAvatar(
+        backgroundColor: const Color.fromRGBO(148, 148, 148, 0.5),
+        child: FittedBox(fit: BoxFit.cover, child: Text(entry.value)),
+      ));
+}
+
+Widget addGroup() {
+  return ElevatedButton(
+    onPressed: () => Get.dialog(AddGroupDialog()),
+    child: Icon(Icons.add, color: Colors.white),
+    style: ElevatedButton.styleFrom(
+      shape: CircleBorder(),
+      padding: EdgeInsets.all(10),
+      backgroundColor:
+          const Color.fromRGBO(148, 148, 148, 0.5), // <-- Button color
+      foregroundColor: Colors.red, // <-- Splash color
+    ),
   );
 }

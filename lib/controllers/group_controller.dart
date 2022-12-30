@@ -1,7 +1,6 @@
 import 'dart:developer' as dev;
 
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:get/get.dart';
 
@@ -50,4 +49,24 @@ class GroupController extends GetxController with DataLoadMixin {
       dev.log('_myGroups: $_myGroups');
     });
   }
+}
+
+Future<String?> participateGroup(String code) async {
+  final userId = FirebaseAuth.instance.currentUser?.uid;
+  final userName = FirebaseAuth.instance.currentUser?.displayName;
+
+  if (userId == null || userName == null) return 'need to login'.tr;
+
+  var groupRef = FirebaseDatabase.instance.ref('groups/$code');
+  var snapshot = await groupRef.child('name').get();
+  if (snapshot.exists == false) return 'not founeded'.tr;
+
+  var userRef = FirebaseDatabase.instance.ref('users/$userId/groups');
+
+  await userRef.update({code: snapshot.value});
+  await groupRef.update({
+    'members': {userId: userName}
+  });
+
+  return null;
 }
