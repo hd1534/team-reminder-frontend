@@ -38,8 +38,8 @@ mixin DataLoadMixin {
       // developer.log('Response body: ${response.body}');
 
       // TEMP: dummy data
-      final json = jsonDecode(dummy[url] ?? '{}');
-      setData(json);
+      // final json = jsonDecode(dummy[url] ?? '{}');
+      // setData(json);
     }
 
     // error handling

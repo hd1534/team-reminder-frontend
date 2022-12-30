@@ -6,8 +6,7 @@ import 'package:get/get.dart';
 
 import 'package:team_reminder_frontend/utils/getx/views/overlapping_panels.dart';
 
-import 'package:team_reminder_frontend/widgets/group.dart';
-
+import 'package:team_reminder_frontend/views/group_thread.dart';
 import 'package:team_reminder_frontend/views/center.dart';
 import 'package:team_reminder_frontend/views/users.dart';
 
@@ -17,7 +16,7 @@ class HomeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const OverlappingPanels(
-      leftWidget: GroupWidget(),
+      leftWidget: Groupthread(),
       mainWidget: CenterView(),
       rightWidget: UsersWidget(),
     );

@@ -59,6 +59,8 @@ class MyApp extends StatelessWidget {
               // logged in
               final user = snapshot.data;
               if (user != null) {
+                Get.find<AppController>().initAfterLogin();
+
                 return const HomeWidget();
               }
 

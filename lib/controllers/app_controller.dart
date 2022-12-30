@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 
+import 'package:team_reminder_frontend/controllers/user_controller.dart';
 import 'package:team_reminder_frontend/controllers/group_controller.dart';
 import 'package:team_reminder_frontend/controllers/thread_controller.dart';
 
@@ -12,9 +13,6 @@ class AppController extends GetxService {
 
   Future<void> initialize() async {
     try {
-      // init process
-      await Future.delayed(const Duration(seconds: 1)); // TODO: remove
-
       await initGetxController();
     } on Exception catch (e) {
       _exception = e;
@@ -23,12 +21,20 @@ class AppController extends GetxService {
     }
   }
 
+  Future<void> initAfterLogin() async {
+    try {
+      Get.find<GroupController>().listeningMyGroups();
+    } on Exception catch (e) {
+      _exception = e;
+    } finally {
+      _isInitialized.value = true;
+    }
+  }
+
   Future<void> initGetxController() async {
+    Get.put(UserController());
     Get.put(GroupController());
     Get.put(ThreadController());
-
-    Get.find<GroupController>().changeGroup('test'); // TODO: remove tmp code
-    Get.find<ThreadController>().changeThread('test'); // TODO: remove tmp code
   }
 
   @override
