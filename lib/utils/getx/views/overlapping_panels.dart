@@ -13,6 +13,9 @@ class OverlappingPanels extends StatelessWidget {
   final Widget? leftWidget;
   final Widget? rightWidget;
 
+  /// horizontal gap between widgets
+  final double hGap;
+
   /// A callback to notify when a panel reveal has completed.
   final ValueChanged<Side>? onSideChange;
   final ValueChanged<Side>? afterSideChanged;
@@ -24,6 +27,7 @@ class OverlappingPanels extends StatelessWidget {
     this.rightWidget,
     this.onSideChange,
     this.afterSideChanged,
+    this.hGap = 5,
   });
 
   @override
@@ -41,11 +45,16 @@ class OverlappingPanels extends StatelessWidget {
             return Stack(children: [
               Offstage(
                 offstage: _.dx <= 0,
-                child: leftWidget,
+                child: Padding(
+                    padding: EdgeInsets.only(right: _.restWidth + hGap),
+                    child: leftWidget),
               ),
               Offstage(
                 offstage: _.dx >= 0,
-                child: rightWidget,
+                child: Padding(
+                  padding: EdgeInsets.only(left: _.restWidth + hGap),
+                  child: rightWidget,
+                ),
               ),
               Transform.translate(
                 offset: Offset(_.dx, 0),
